@@ -178,6 +178,12 @@ async function postEpisode(youtubeVideoInfo) {
     await clickSelector(page, selectorForExplicitContentLabel, { visible: true });
   }
 
+    console.log('-- Selection content sponsorship (sponsored or not sponsored)');
+    const selectorForSponsoredContent = env.IS_SPONSORED
+      ? 'input[type="radio"][id="sponsored-content"]'
+      : 'input[type="radio"][id="no-sponsored-content"]';
+    await clickSelector(page, selectorForSponsoredContent, { visible: true });
+  
   async function fillOptionalDetails() {
     console.log('-- Clicking Additional Details');
     await clickXpath(page, '//button[contains(text(), "Additional details")]');
