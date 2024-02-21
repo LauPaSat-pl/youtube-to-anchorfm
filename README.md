@@ -111,6 +111,15 @@ By setting the `IS_EXPLICIT`, the new episode will be marked as explicit.
 env:
   IS_EXPLICIT: true
 ```
+### Sponsored Content
+
+By setting `IS_SPONSORED`, the new episode will be marked as having promotional content (sponsored).
+Default is `false`.
+
+```yaml
+env:
+  IS_SPONSORED: true
+```
 
 ### Thumbnail Mode
 
