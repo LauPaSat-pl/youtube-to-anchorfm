@@ -51,6 +51,9 @@ async function postEpisode(youtubeVideoInfo) {
 
     page = await openNewPage('https://podcasters.spotify.com/pod/dashboard/episode/wizard');
 
+    console.log('Accepting default cookies')
+    await acceptDefaultCookies()
+
     console.log('Setting language to English');
     await setLanguageToEnglish();
 
@@ -102,6 +105,15 @@ async function postEpisode(youtubeVideoInfo) {
     await newPage.goto(url);
     await newPage.setViewport({ width: 1600, height: 789 });
     return newPage;
+  }
+
+  async function acceptDefaultCookies() {
+    try {
+      await clickSelector(page, '#onetrust-pc-btn-handler', env.COOKIE_TIMEOUT);
+      await clickSelector(page, '.save-preference-btn-handler.onetrust-close-btn-handler', env.UPLOAD_TIMEOUT);
+    } catch (err) {
+      console.log('Cookie already accepted or not UE based user');
+    }
   }
 
   async function setLanguageToEnglish() {
