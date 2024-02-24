@@ -121,6 +121,16 @@ env:
   IS_SPONSORED: true
 ```
 
+### Sponsored Content
+
+By setting `IS_SPONSORED`, the new episode will be marked as having promotional content (sponsored).
+Default is `false`.
+
+```yaml
+env:
+  IS_SPONSORED: true
+```
+
 ### Thumbnail Mode
 
 By setting the `LOAD_THUMBNAIL`, the new episode will include the video thumbnail as the episode art.
