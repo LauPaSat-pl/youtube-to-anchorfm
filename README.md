@@ -67,17 +67,30 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Upload Episode from YouTube To Anchor.Fm
-        uses: Schrodinger-Hat/youtube-to-anchorfm@v2.0.0
+        uses: Schrodinger-Hat/youtube-to-anchorfm@v2.4.0
         env:
           ANCHOR_EMAIL: ${{ secrets.ANCHOR_EMAIL }}
           ANCHOR_PASSWORD: ${{ secrets.ANCHOR_PASSWORD }}
+          SPOTIFY_EMAIL: ${{ secrets.SPOTIFY_EMAIL }}
+          SPOTIFY_PASSWORD: ${{ secrets.SPOTIFY_PASSWORD }}
           EPISODE_PATH: /github/workspace
 ```
 
-**NOTE**: you need to [set up the secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) for _ANCHOR_EMAIL_ and _ANCHOR_PASSWORD_. This environment variables are mandatory as they specify the sign in account.
+**NOTE**: you need to [set up the secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) for _ANCHOR_EMAIL_ and _ANCHOR_PASSWORD_. This environment variables are mandatory as they specify the sign in account. 
+
+Instead the _SPOTIFY_EMAIL_ and _SPOTIFY_PASSWORD_ are not mandatory but can still be set, if needed, and will be used for the new login form if the env variable _ANCHOR_LOGIN_ is set to false.
 
 
 ## Environment variables
+
+### Login Type
+
+Setting the `ANCHOR_LOGIN` to true makes the script login with the old anchor login type. Instead setting it to false makes the script login with the spotify account. By default the value is true.
+
+```yaml
+env:
+  ANCHOR_LOGIN: true
+```
 
 ### Draft Mode
 
@@ -100,7 +113,15 @@ The example below convert the video to mono audio.
 
 ```yaml
 env:
-  POSTPROCESSOR_ARGS: 'ffmpeg:-ac 1'
+  POSTPROCESSOR_ARGS: 'ExtractAudio+ffmpeg:-ac 1'
+```
+
+To convert to mono audio, remove initial silence and apply fade-in:
+
+```yaml
+# remove initial silence quieter than -50dB
+env:
+  POSTPROCESSOR_ARGS: "ExtractAudio+ffmpeg:-ac 1 -af silenceremove=1:0:-50dB,afade=t=in:d=5"
 ```
 
 ### Explicit Mode
@@ -204,6 +225,8 @@ jobs:
         env:
           ANCHOR_EMAIL: ${{ secrets.ANCHOR_EMAIL_GREATNEWS}}  # OR secrets.ANCHOR_EMAIL_SADNEWS 
           ANCHOR_PASSWORD: ${{ secrets.ANCHOR_PASSWORD_GREATNEWS }}  # OR secrets.ANCHOR_PASSWORD_SADNEWS
+          SPOTIFY_EMAIL: ${{ secrets.SPOTIFY_EMAIL_GREATNEWS }}  # OR secrets.SPOTIFY_EMAIL_SADNEWS
+          SPOTIFY_PASSWORD: ${{ secrets.SPOTIFY_PASSWORD_GREATNEWS }}  # OR secrets.SPOTIFY_PASSWORD_SADNEWS
           EPISODE_PATH: /github/workspace/
           EPISODE_FILE: great-news.json
           # (…) Other configs as needed
@@ -225,6 +248,8 @@ To do that, you can copy `.env.sample` into a file with name `.env`.
 
 Make sure to specify the mandatory environment variables for logging in to Anchor.fm,
 `ANCHOR_EMAIL` and `ANCHOR_PASSWORD`.
+
+If needed we can set the `SPOTIFY_EMAIL` and `SPOTIFY_PASSWORD` too, so they will be used to login with the new login type after changing `ANCHOR_LOGIN` to false.
 
 Finally, you can do `npm start` to execute the script.
 
