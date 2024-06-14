@@ -157,7 +157,7 @@ async function postEpisode(youtubeVideoInfo) {
     await page.type('#login-password', env.SPOTIFY_PASSWORD);
     await sleepSeconds(1);
     await clickSelector(page, 'button[id="login-button"]');
-    await clickSelector(page, 'button[data-testid="auth-accept"]');
+    // await clickSelector(page, 'button[data-testid="auth-accept"]');   -   I don't think it's neccesary
     await page.waitForNavigation();
     console.log('-- In the app');
   }
